@@ -97,23 +97,23 @@ erDiagram
     USER ||--o{ MODERATION_ITEM : "reports"
     USER ||--o{ NOTIFICATION : "receives"
     USER ||--o{ DATA_EXPORT : "requests"
-    
+
     QUEST ||--o{ SUBMISSION : "has"
     QUEST ||--o{ PAYOUT : "generates"
-    
+
     SUBMISSION ||--|| USER : "belongs to"
     SUBMISSION ||--|| QUEST : "for"
     SUBMISSION ||--o| MODERATION_ITEM : "may be flagged"
-    
+
     PAYOUT ||--|| USER : "paid to"
     PAYOUT ||--|| SUBMISSION : "for"
-    
+
     MODERATION_ITEM ||--|| USER : "reported by"
     MODERATION_ITEM ||--|| SUBMISSION : "references"
     MODERATION_ITEM ||--o{ MODERATION_APPEAL : "has appeals"
-    
+
     NOTIFICATION ||--|| USER : "sent to"
-    
+
     USER {
         uuid id PK
         string stellarAddress UK
@@ -131,7 +131,7 @@ erDiagram
         enum privacyLevel
         timestamp lastActiveAt
     }
-    
+
     SUBMISSION {
         uuid id PK
         uuid questId FK
@@ -145,7 +145,7 @@ erDiagram
         string rejectionReason
         string verifierNotes
     }
-    
+
     QUEST {
         uuid id PK
         string title
@@ -163,7 +163,7 @@ erDiagram
         timestamp startDate
         timestamp endDate
     }
-    
+
     PAYOUT {
         uuid id PK
         uuid userId FK
@@ -174,7 +174,7 @@ erDiagram
         string transactionHash
         timestamp processedAt
     }
-    
+
     MODERATION_ITEM {
         uuid id PK
         uuid userId FK "reporter"
@@ -185,7 +185,7 @@ erDiagram
         timestamp reviewedAt
         string reviewedBy
     }
-    
+
     NOTIFICATION {
         uuid id PK
         uuid userId FK
@@ -237,6 +237,7 @@ graph LR
 ## Module Data Flow
 
 ### Submission Flow
+
 ```mermaid
 sequenceDiagram
     participant User
@@ -251,7 +252,7 @@ sequenceDiagram
     Submissions->>Quests: Validate Quest
     Submissions->>Submissions: Save Submission (PENDING)
     Submissions->>Notifications: Notify Verifiers
-    
+
     Moderation->>Submissions: Review Submission
     alt Approved
         Submissions->>Submissions: Update Status (APPROVED)
@@ -268,6 +269,7 @@ sequenceDiagram
 ```
 
 ### User Reputation Flow
+
 ```mermaid
 sequenceDiagram
     participant Submission
@@ -291,27 +293,27 @@ sequenceDiagram
 
 ### Core Modules
 
-| Module | Responsibility | Key Entities |
-|--------|---------------|--------------|
-| **Submissions** | Manage quest submissions, verification workflow | Submission, SubmissionStatus |
-| **Users** | User management, reputation system, gamification | User, DataExport, PrivacyLevel |
-| **Quests** | Quest creation, management, verification config | Quest, QuestStatus |
-| **Payouts** | Payment processing, Stellar integration | Payout |
-| **Moderation** | Content moderation, appeals system | ModerationItem, ModerationAppeal |
-| **Notifications** | Multi-channel notification delivery | Notification, NotificationLog, NotificationPreference |
-| **Stellar** | Blockchain operations, multisig wallets | MultisigWallet, MultisigTransaction, MultisigSignature |
+| Module            | Responsibility                                   | Key Entities                                           |
+| ----------------- | ------------------------------------------------ | ------------------------------------------------------ |
+| **Submissions**   | Manage quest submissions, verification workflow  | Submission, SubmissionStatus                           |
+| **Users**         | User management, reputation system, gamification | User, DataExport, PrivacyLevel                         |
+| **Quests**        | Quest creation, management, verification config  | Quest, QuestStatus                                     |
+| **Payouts**       | Payment processing, Stellar integration          | Payout                                                 |
+| **Moderation**    | Content moderation, appeals system               | ModerationItem, ModerationAppeal                       |
+| **Notifications** | Multi-channel notification delivery              | Notification, NotificationLog, NotificationPreference  |
+| **Stellar**       | Blockchain operations, multisig wallets          | MultisigWallet, MultisigTransaction, MultisigSignature |
 
 ### Supporting Modules
 
-| Module | Responsibility |
-|--------|---------------|
-| **Auth** | Authentication, authorization, JWT tokens |
-| **Cache** | Caching layer, cache strategies |
-| **Jobs** | Background job processing, scheduled tasks |
-| **Analytics** | Reporting, data aggregation, snapshots |
-| **Email** | Email delivery, templates |
-| **WebSocket** | Real-time communication |
-| **Webhooks** | External webhook delivery |
+| Module        | Responsibility                             |
+| ------------- | ------------------------------------------ |
+| **Auth**      | Authentication, authorization, JWT tokens  |
+| **Cache**     | Caching layer, cache strategies            |
+| **Jobs**      | Background job processing, scheduled tasks |
+| **Analytics** | Reporting, data aggregation, snapshots     |
+| **Email**     | Email delivery, templates                  |
+| **WebSocket** | Real-time communication                    |
+| **Webhooks**  | External webhook delivery                  |
 
 ## Common Layer
 
@@ -381,7 +383,7 @@ graph LR
     S2 --> EVT
     S3 --> EVT
     S4 --> EVT
-    
+
     EVT --> C1
     EVT --> C2
     EVT --> C3
